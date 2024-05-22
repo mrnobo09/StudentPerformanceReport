@@ -39,7 +39,7 @@ export default function AttendanceCard() {
     }, [stdId]);
 
     return (
-        <div className="w-[54rem] h-[20rem] p-3 bg-black mr-3">
+        <div className="w-[50rem] h-[20rem] p-3 bg-[#02070f] mr-3 shadow-[25px_55px_70px_-15px_rgba(0,0,0,1)]">
             <h1 className="text-white mb-4 text-2xl">Attendance</h1>
             {attendance && attendance.attendance ? (
                 attendance.attendance.map((subject, index) => (
@@ -47,9 +47,9 @@ export default function AttendanceCard() {
                         <h2 className="text-white text-xl">{subject.course_name}</h2>
                         <ProgressBar 
                             completed={subject.attendance_percentage} 
-                            bgColor='#4858a6' 
+                            bgColor='#1565c0' 
                             height='10px'
-                            isLabelVisible='false'
+                            isLabelVisible={false}
                             animateOnRender 
                         />
                     </div>

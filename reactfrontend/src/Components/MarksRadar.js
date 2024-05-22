@@ -68,7 +68,7 @@ const MarksRadar = () => {
     };
 
     return( 
-        <div>
+        <div class='w-[50w]'>
             <Radar data={data} options={options} />
         </div>
     );
