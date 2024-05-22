@@ -10,7 +10,7 @@ export default function WelcomeCard(){
       }, []);
     
     return(
-        <div class = "w-[75em] h-[15em] bg-gradient-to-r from-[#384dbb] to-[#515d9a] rounded-[1.5rem] grid grid-flow-col grid-cols-1 items-center">
+        <div class = "w-[70vw] h-[15em] bg-gradient-to-r from-[#384dbb] to-[#515d9a] rounded-[1.5rem] grid grid-flow-col grid-cols-1 items-center">
             <div class="m-[2rem]">
                 <p class="text-[#ffffff98] text-lg m-0">{currentDate()}</p>
                 <h1 class="text-white text-[4rem] font-bold">Welcome Back, {FirstName}! </h1>

@@ -110,7 +110,7 @@ class Result(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     semester = models.ForeignKey(Semester, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    total_marks = models.IntegerField(default=0)
+    total_marks = models.FloatField(default=0.0)  # Use FloatField for percentage
     grade = models.CharField(max_length=2, blank=True)
 
     def calculate_total_marks(self):
@@ -120,7 +120,13 @@ class Result(models.Model):
         finals_marks = sum(finals.obtained_marks for finals in Finals.objects.filter(student=self.student, course=self.course))
         project_marks = sum(project.obtained_marks for project in Project.objects.filter(student=self.student, course=self.course))
 
-        self.total_marks = quiz_marks + assignment_marks + mids_marks + finals_marks + project_marks
+        total_quiz_marks = quiz_marks * 0.10
+        total_assignment_marks = assignment_marks * 0.10
+        total_mids_marks = mids_marks * 0.25
+        total_finals_marks = finals_marks * 0.45
+        total_project_marks = project_marks * 0.10
+
+        self.total_marks = total_quiz_marks + total_assignment_marks + total_mids_marks + total_finals_marks + total_project_marks
 
     def calculate_grade(self):
         if self.total_marks >= 90:
@@ -138,6 +144,7 @@ class Result(models.Model):
         self.calculate_total_marks()
         self.calculate_grade()
         super(Result, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return f"{self.student.std_id} - {self.semester} - {self.course.title} - {self.grade}"

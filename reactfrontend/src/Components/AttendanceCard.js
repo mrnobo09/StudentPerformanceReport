@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import ProgressBar from "@ramonak/react-progress-bar";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 export default function AttendanceCard() {
-    const [attendance, setAttendance] = useState(0);
-    const [Std_id, setStd_id] = useState("");
-    const navigate = useNavigate()
+    const [attendance, setAttendance] = useState(null);
+    const [stdId, setStdId] = useState("");
+
     useEffect(() => {
         function getID() {
             const userId = localStorage.getItem("user_id");
-            setStd_id(userId);
-            console.log(typeof(Std_id));
+            setStdId(userId);
         }
         getID();
     }, []);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (Std_id) {
+            if (stdId) {
                 let config = {
                     headers: {
                         'Content-Type': 'application/json',
@@ -28,8 +26,9 @@ export default function AttendanceCard() {
                 };
 
                 try {
-                    const response = await axios.get(`http://127.0.0.1:8000/api/attendance/${Std_id}/`, config);
-                    setAttendance(response.data.attendance_percentage);
+                    const response = await axios.get(`http://127.0.0.1:8000/api/attendance/${stdId}/`, config);
+                    console.log("Attendance:", response.data);
+                    setAttendance(response.data);
                 } catch (error) {
                     console.log("Couldn't get attendance");
                 }
@@ -37,12 +36,27 @@ export default function AttendanceCard() {
         };
 
         fetchData();
-    }, [Std_id]);
+    }, [stdId]);
 
     return (
-        <div className="w-[54rem] h-[6rem] p-3 bg-black rounded-[1rem] ml-3">
-            <h1 className="text-white mb-2">Attendance</h1>
-            <ProgressBar completed={attendance} bgColor='#4942bc' animateOnRender />
+        <div className="w-[54rem] h-[20rem] p-3 bg-black mr-3">
+            <h1 className="text-white mb-4 text-2xl">Attendance</h1>
+            {attendance && attendance.attendance ? (
+                attendance.attendance.map((subject, index) => (
+                    <div key={index} className="mb-2">
+                        <h2 className="text-white text-xl">{subject.course_name}</h2>
+                        <ProgressBar 
+                            completed={subject.attendance_percentage} 
+                            bgColor='#4858a6' 
+                            height='10px'
+                            isLabelVisible='false'
+                            animateOnRender 
+                        />
+                    </div>
+                ))
+            ) : (
+                <p className="text-white">Loading attendance...</p>
+            )}
         </div>
     );
 }

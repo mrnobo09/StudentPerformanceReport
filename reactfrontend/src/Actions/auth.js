@@ -55,7 +55,7 @@ export const load_user = () => async dispatch => {
             });
             localStorage.setItem("user_id", res.data.std_id);
             localStorage.setItem("user_first_name", res.data.first_name);
-            localStorage.setItem("user_last_name",JSON.stringify(res.data.last_name));
+            localStorage.setItem("user_last_name",res.data.last_name);
             localStorage.setItem("user_email",JSON.stringify(res.data.email))
         } catch (err) {
             dispatch({ type: USER_LOADED_FAIL });

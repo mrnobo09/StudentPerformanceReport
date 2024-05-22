@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from .models import User, Attendance, Quiz, Assignment, Mids, Finals, Project,Result
+from .models import User, Attendance, Quiz, Assignment, Mids, Finals, Project,Result,Enrollment
 from .serializers import AttendanceSerializer, QuizSerializer, AssignmentSerializer, MidsSerializer, FinalsSerializer, ProjectSerializer,ResultSerializer
 
 class AttendanceView(APIView):
@@ -14,13 +14,23 @@ class AttendanceView(APIView):
         if request.user != student:
             return Response({"detail": "You do not have permission to view this student's attendance."}, status=403)
 
-        total_attendance = Attendance.objects.filter(enrollment__student=student).count()
-        total_periods = 17
-        attendance_percentage = (total_attendance / total_periods) * 100
+        enrollments = Enrollment.objects.filter(student=student)
+        attendance_data = []
+
+        for enrollment in enrollments:
+            course = enrollment.course
+            total_attendance = Attendance.objects.filter(enrollment=enrollment, presence=True).count()
+            total_periods = 17
+            attendance_percentage = (total_attendance / total_periods) * 100 if total_periods > 0 else 0
+
+            attendance_data.append({
+                "course_name": course.title,
+                "attendance_percentage": round(attendance_percentage, 2)
+            })
 
         student_attendance = {
             "student_name": f"{student.first_name} {student.last_name}",
-            "attendance_percentage": round(attendance_percentage, 2)
+            "attendance": attendance_data
         }
 
         return Response(student_attendance)

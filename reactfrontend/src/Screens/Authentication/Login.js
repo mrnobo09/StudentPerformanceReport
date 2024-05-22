@@ -18,31 +18,38 @@ const Login = ({login,isAuthenticated}) => {
         login(email,password);
     };
     const navigate = useNavigate();
-    //isAuthenticated?
     if (isAuthenticated)
         navigate('/dashboard')
         
-    //Redirect them to the home page
     return (
-        <div className='container'>
-            <div className='row align-items-center' style={{ backgroundColor: '#f8f9fa' , height:'100vh' }}>
-                <div className='col-md-6'>
-                    <h1>Login</h1>
-                    <form onSubmit={e => onSubmit(e)}>
-                        <div>
-                            <input className="form-control mt-2" type='email' placeholder='Email' name='email' value={email} onChange={e => onChange(e)} required />
-                        </div>
-                        <div>
-                            <input className='form-control mt-2' type='password' placeholder='Password' name='password' value={password} onChange={e => onChange(e)} minLength='8' required />
-                        </div>
-                        <button className='btn btn-primary mt-2' type = 'submit'>Login</button>
-                    </form>
+            <div className="grid grid-flow-col grid-cols-5 w-[100vw] h-[100vh] font-poppins overflow-hidden">
+                <div className="bg-[#070912] grid justify-center place-items-center lg:col-span-2 col-span-5">
+                    <div className="w-[20rem] lg:w-[25rem] h-auto md:w-[22rem]">
+                        <h2 className="text-white text-[3rem] sm:text-[4rem] lg:text-[5rem]">Login</h2>
+                        <form onSubmit={e => onSubmit(e)}>
+                            <div className="w-full">
+                                <input className="w-full bg-transparent h-[2.5rem] mt-4 border-solid border-b-2 border-[#3b3d44] active:bg-transparent focus:outline-none focus:border-white focus:text-white transition duration-300 ease-in-out" type="email" placeholder="Email" name="email" value={email} onChange={e => onChange(e)} required />
+                            </div>
+                            <div className="w-full">
+                                <input className="w-full bg-transparent h-[2.5rem] mt-4 border-solid border-b-2 border-[#3b3d44] active:bg-transparent focus:outline-none focus:border-white focus:text-white transition duration-300 ease-in-out" type="password" placeholder="Password" name="password" value={password} onChange={e => onChange(e)} required />
+                            </div>
+                            <div>
+                                <button className="w-full h-[3rem] mt-6 rounded-[0.5rem] bg-[#394ebc] text-white hover:bg-[#4f5eac] transition duration-250 ease-in-out" type="submit">Login</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div className='col-md-6'>
-                    {/* Content for the right side */}
+                <div className="hidden md:bg-[#394ebc] md:col-span-3 md:block lg:grid lg:items-center lg:justify-center">
+                    <div className="w-full px-4 sm:px-6 lg:px-8">
+                        <div>
+                            <h1 className="text-white text-[3rem] sm:text-[4rem] font-bold tracking-widest">Welcome to</h1>
+                            <h1 className="text-white text-[3rem] sm:text-[4rem]">student portal</h1>
+                        </div>
+                        <img src="https://iili.io/JiIz9P2.png" className="w-full h-auto" alt="Login" />
+                    </div>
                 </div>
             </div>
-        </div>
+
     );
     
 
