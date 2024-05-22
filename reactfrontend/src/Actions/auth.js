@@ -75,7 +75,7 @@ export const login = (email, password) => async dispatch => {
 
     try {
         const res = await axios.post('http://127.0.0.1:8000/auth/jwt/create/', body, config);
-        console.log("Login response data: ", res.data);  // Ensure you're logging the correct data
+        console.log("Login response data: ", res.data); 
         dispatch({
             type: LOGIN_SUCCESS,
             payload: res.data
@@ -88,7 +88,6 @@ export const login = (email, password) => async dispatch => {
     }
 };
 
-// Logout user
 export const logout = () => dispatch => {
     dispatch({ type: LOGOUT });
     localStorage.removeItem('access');

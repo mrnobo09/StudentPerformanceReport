@@ -8,6 +8,7 @@ ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, 
 const MarksRadar = () => {
     const [subjects, setSubjects] = useState([]);
     const [performance, setPerformance] = useState([]);
+    const [average, setAverage] = useState([]);
 
     useEffect(() => {
         const std_id = localStorage.getItem("user_id");
@@ -22,11 +23,15 @@ const MarksRadar = () => {
 
             try {
                 const response = await axios.get(`http://127.0.0.1:8000/api/student-performance/${std_id}/`, config);
-                console.log("Response Data: ", response.data);
                 const subjects = Object.keys(response.data.performance_by_course);
                 const performance = Object.values(response.data.performance_by_course);
                 setSubjects(subjects);
                 setPerformance(performance);
+
+                const response_2 = await axios.get(`http://127.0.0.1:8000/api/classAverage/`, config);
+                const averageData = response_2.data.map(course => course.average_percentage);
+                setAverage(averageData);
+                console.log(averageData);
             } catch (error) {
                 console.log("Error getting Marks:", error);
             }
@@ -41,10 +46,18 @@ const MarksRadar = () => {
             {
                 label: 'Performance',
                 data: performance,
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(251, 255, 28, 0.3)',
+                borderColor: 'rgba(251, 255, 28, 1)',
                 borderWidth: 1,
             },
+            {
+                label: 'Class Average',
+                data: average,
+                backgroundColor: 'rgba(21, 101, 192, 0.3)',
+                borderColor: 'rgba(74, 89, 164, 1)',
+                borderWidth: 1,
+            },
+            
         ],
     };
 

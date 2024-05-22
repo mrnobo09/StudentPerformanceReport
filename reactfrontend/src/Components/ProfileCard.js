@@ -30,10 +30,9 @@ export default function ProfileCard() {
     }, []);
 
     return (
-        <div className="grid grid-flow-col grid-cols-3 w-[70vw] h-[9vh] rounded-[3rem] mt-5 mb-4 justify-center items-center bg-gradient-to-r from-[#384dbb] to-[#515d9a]">
+        <div className="grid grid-flow-col grid-cols-3 w-[20vw] h-[9vh] rounded-[3rem] mt-5 mb-4 justify-center items-center bg-gradient-to-r from-[#384dbb] to-[#515d9a]">
             <img className="rounded-[50%] col-span-1 m-2" src="https://placehold.co/60" alt="Profile"/>
-            <h1 className="col-span-1 text-white lg:text-[2rem] text-center">{name}</h1>
-            <h2 className="col-span-1 text-white lg:text-[2rem] text-center">{time}</h2>
+            <h1 className="col-span-2 text-white text-xl text-center">{name}</h1>
             <div className="grid grid-flow-col col-span-2 justify-end items-center">
                 <img className="m-2 w-[2rem]" src="https://iili.io/JrJTAZX.png" alt="Icon 1"/>
                 <img className="m-2 w-[2rem]" src="https://iili.io/JrJIRrx.png" alt="Icon 2"/>

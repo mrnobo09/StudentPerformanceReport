@@ -2,8 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from .models import User, Attendance, Quiz, Assignment, Mids, Finals, Project,Result,Enrollment
+from .models import User, Attendance, Quiz, Assignment, Mids, Finals, Project,Result,Enrollment,Course
 from .serializers import AttendanceSerializer, QuizSerializer, AssignmentSerializer, MidsSerializer, FinalsSerializer, ProjectSerializer,ResultSerializer
+from django.db.models import Avg, Sum, F, FloatField
 
 class AttendanceView(APIView):
     permission_classes = [IsAuthenticated]
@@ -65,6 +66,60 @@ class MarksView(APIView):
             "finals": finals_serializer.data,
             "projects": project_serializer.data
         })
+
+class AverageObtainedPercentageView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        courses = Course.objects.all()
+        results = []
+
+        for course in courses:
+            quizzes_avg = Quiz.objects.filter(course=course).aggregate(
+                total_obtained=Sum(F('obtained_marks') * 0.10, output_field=FloatField()),
+                total_marks=Sum(F('total_marks') * 0.10, output_field=FloatField())
+            )
+            assignments_avg = Assignment.objects.filter(course=course).aggregate(
+                total_obtained=Sum(F('obtained_marks') * 0.10, output_field=FloatField()),
+                total_marks=Sum(F('total_marks') * 0.10, output_field=FloatField())
+            )
+            mids_avg = Mids.objects.filter(course=course).aggregate(
+                total_obtained=Sum(F('obtained_marks') * 0.25, output_field=FloatField()),
+                total_marks=Sum(F('total_marks') * 0.25, output_field=FloatField())
+            )
+            finals_avg = Finals.objects.filter(course=course).aggregate(
+                total_obtained=Sum(F('obtained_marks') * 0.45, output_field=FloatField()),
+                total_marks=Sum(F('total_marks') * 0.45, output_field=FloatField())
+            )
+            projects_avg = Project.objects.filter(course=course).aggregate(
+                total_obtained=Sum(F('obtained_marks') * 0.10, output_field=FloatField()),
+                total_marks=Sum(F('total_marks') * 0.10, output_field=FloatField())
+            )
+
+            total_obtained = (
+                (quizzes_avg['total_obtained'] or 0) +
+                (assignments_avg['total_obtained'] or 0) +
+                (mids_avg['total_obtained'] or 0) +
+                (finals_avg['total_obtained'] or 0) +
+                (projects_avg['total_obtained'] or 0)
+            )
+
+            total_marks = (
+                (quizzes_avg['total_marks'] or 0) +
+                (assignments_avg['total_marks'] or 0) +
+                (mids_avg['total_marks'] or 0) +
+                (finals_avg['total_marks'] or 0) +
+                (projects_avg['total_marks'] or 0)
+            )
+
+            average_percentage = (total_obtained / total_marks) * 100 if total_marks > 0 else 0
+
+            results.append({
+                "course_name": course.title,
+                "average_percentage": round(average_percentage, 2)
+            })
+
+        return Response(results)
 
 class StudentPerformanceView(APIView):
     permission_classes = [IsAuthenticated]
